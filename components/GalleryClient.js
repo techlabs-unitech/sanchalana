@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSite } from "@/context/SiteContext";
 import PageShell from "@/components/PageShell";
@@ -22,11 +22,21 @@ const PLACEHOLDER_ITEMS = [
 export default function GalleryClient({ items }) {
   const { t } = useSite();
   const [filter, setFilter] = useState("all");
+  const router = useRouter();
 
-  const usingPlaceholders = !items || items.length === 0;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.refresh();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [router]);
+
+  const usingPlaceholders = false;
+
   const source = usingPlaceholders
     ? PLACEHOLDER_ITEMS
-    : items.map((row) => ({
+    : (items || []).map((row) => ({
         id: row.id,
         cat: row.media_type,
         size: row.size || "",
@@ -36,18 +46,29 @@ export default function GalleryClient({ items }) {
         altText: row.alt_text,
       }));
 
-  const visible = source.filter((i) => filter === "all" || i.cat === filter);
+  const visible = source.filter(
+    (i) => filter === "all" || i.cat === filter
+  );
 
   return (
     <PageShell>
-      <section className="page-hero" style={{ background: "var(--surface)" }}>
+      <section
+        className="page-hero"
+        style={{ background: "var(--surface)" }}
+      >
         <div className="wrap">
           <div className="breadcrumb">
             <Link href="/">{t("nav_home")}</Link>
             <span className="sep">/</span>
-            <span className="current">{t("breadcrumb_gallery")}</span>
+            <span className="current">
+              {t("breadcrumb_gallery")}
+            </span>
           </div>
-          <span className="eyebrow">{t("gallery_eyebrow")}</span>
+
+          <span className="eyebrow">
+            {t("gallery_eyebrow")}
+          </span>
+
           <h1>{t("gallery_title")}</h1>
         </div>
       </section>
@@ -56,7 +77,11 @@ export default function GalleryClient({ items }) {
         <div className="wrap">
           <div className="filter-tabs">
             {["all", "photo", "video"].map((f) => (
-              <button key={f} className={filter === f ? "active" : ""} onClick={() => setFilter(f)}>
+              <button
+                key={f}
+                className={filter === f ? "active" : ""}
+                onClick={() => setFilter(f)}
+              >
                 {t(`filter_${f}`)}
               </button>
             ))}
@@ -65,22 +90,46 @@ export default function GalleryClient({ items }) {
           <div className="gallery-grid">
             {visible.map((item) => {
               const content = item.imageUrl ? (
-                <div className="img-placeholder" style={{ position: "relative" }}>
-                  <Image
+                <div
+                  className="img-placeholder"
+                  style={{
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
                     src={item.imageUrl}
-                    alt={item.altText || item.caption || t("gallery_title")}
-                    fill
-                    sizes="(max-width: 640px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
+                    alt={
+                      item.altText ||
+                      item.caption ||
+                      t("gallery_title")
+                    }
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
                   />
+
                   {item.cat === "video" && (
                     <a
                       href={item.videoUrl || "#"}
                       target="_blank"
                       rel="noreferrer"
                       className="play-btn"
-                      style={{ width: 44, height: 44, position: "absolute", inset: 0, margin: "auto" }}
-                      aria-label={item.altText || item.caption || "Play video"}
+                      style={{
+                        width: 44,
+                        height: 44,
+                        position: "absolute",
+                        inset: 0,
+                        margin: "auto",
+                      }}
+                      aria-label={
+                        item.altText ||
+                        item.caption ||
+                        "Play video"
+                      }
                     >
                       <PlayIcon />
                     </a>
@@ -89,7 +138,15 @@ export default function GalleryClient({ items }) {
               ) : (
                 <div className="img-placeholder">
                   {item.cat === "video" ? (
-                    <div className="play-btn" style={{ width: 44, height: 44 }}><PlayIcon /></div>
+                    <div
+                      className="play-btn"
+                      style={{
+                        width: 44,
+                        height: 44,
+                      }}
+                    >
+                      <PlayIcon />
+                    </div>
                   ) : (
                     <CameraIcon />
                   )}
@@ -97,8 +154,14 @@ export default function GalleryClient({ items }) {
               );
 
               return (
-                <div className={`gallery-item ${item.size}`} key={item.id}>
-                  <div className="gtype">{t(`filter_${item.cat}`)}</div>
+                <div
+                  className={`gallery-item ${item.size}`}
+                  key={item.id}
+                >
+                  <div className="gtype">
+                    {t(`filter_${item.cat}`)}
+                  </div>
+
                   {content}
                 </div>
               );
@@ -117,7 +180,8 @@ export default function GalleryClient({ items }) {
                 color: "var(--text-soft)",
               }}
             >
-              Showing placeholders — add photos and videos from the admin dashboard&rsquo;s Gallery tab.
+              Showing placeholders — add photos and videos from
+              the admin dashboard&rsquo;s Gallery tab.
             </p>
           )}
         </div>
