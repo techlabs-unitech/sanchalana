@@ -3,10 +3,15 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useSite } from "@/context/SiteContext";
 import PageShell from "@/components/PageShell";
 import SocialStrip from "@/components/SocialStrip";
 import { PlayIcon, CameraIcon, COVER_ICONS } from "@/components/Icons";
+
+const ThreeScene = dynamic(() => import("@/components/3d/ThreeScene"), {
+  ssr: false,
+});
 
 export default function HomeClient({ latestArticles }) {
   const { t } = useSite();
@@ -73,6 +78,17 @@ export default function HomeClient({ latestArticles }) {
       </section>
 
       {/* STATS */}
+            {/* 3D NEWS VISUAL */}
+      <section className="three-d-section">
+        <div className="wrap">
+          <div className="section-head">
+            <span className="eyebrow">EXPLORE</span>
+            <h2>Experience News in 3D</h2>
+          </div>
+
+          <ThreeScene />
+        </div>
+      </section>
       <section className="stats">
         <div className="stats-grid">
           <div className="stat-card"><div className="stat-num">2.5L+</div><div className="stat-label">{t("stat_subs")}</div></div>
