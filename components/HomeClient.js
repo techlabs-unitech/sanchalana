@@ -54,7 +54,6 @@ export default function HomeClient({ latestArticles }) {
                   ref={videoRef}
                   className="hero-video"
                   src="/hero.mp4"
-                  poster="/images/hero-poster.jpg"
                   controls={isPlaying}
                   playsInline
                   onPause={() => setIsPlaying(false)}
