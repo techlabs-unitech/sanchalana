@@ -391,8 +391,11 @@ html[data-theme="dark"] .site-footer{ background:#0F1116; }
 .gallery-item{ position:relative; overflow:hidden; border-radius:var(--radius); border:1px solid var(--border); }
 .gallery-item.tall{ grid-row:span 2; }
 .gallery-item.wide{ grid-column:span 2; }
-.gallery-item .img-placeholder{ aspect-ratio:auto; height:100%; }
-.gallery-item .gtype{
+.gallery-item .img-placeholder{
+  aspect-ratio:4/3;
+  height:auto;
+  min-height:220px;
+}.gallery-item .gtype{
   position:absolute; top:10px; left:10px; background:var(--ink); color:var(--blue-light); font-family:var(--font-label);
   font-size:11px; text-transform:uppercase; letter-spacing:.06em; padding:4px 10px; border-radius:14px;
 }
