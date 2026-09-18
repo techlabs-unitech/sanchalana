@@ -187,3 +187,4 @@ supabase/
   sign-up). For multiple admins with different permission levels, add a
   role/`admins` table and tighten the RLS policies in
   `002_admin_and_seo.sql` accordingly.
+  Vercel auto deployment test
