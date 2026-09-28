@@ -1,5 +1,7 @@
 import "./globals.css";
 import { SiteProvider } from "@/context/SiteContext";
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 export const metadata = {
@@ -37,6 +39,8 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
         <SiteProvider>{children}</SiteProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

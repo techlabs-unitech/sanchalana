@@ -44,7 +44,6 @@ export default function ContactPage() {
       setStatus("error");
     }
   }
-
   const noteText = {
     sent: lang === "en" ? "Message sent — we'll get back to you soon." : "ಸಂದೇಶ ಕಳುಹಿಸಲಾಗಿದೆ — ನಾವು ಶೀಘ್ರದಲ್ಲೇ ಪ್ರತಿಕ್ರಿಯಿಸುತ್ತೇವೆ.",
     error: lang === "en" ? "Something went wrong — please try again." : "ಏನೋ ತಪ್ಪಾಗಿದೆ — ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
@@ -53,7 +52,6 @@ export default function ContactPage() {
         ? "Supabase isn't connected yet, so this message wasn't saved — add your project credentials to .env.local (see supabase/schema.sql and the README)."
         : "ಸುಪಾಬೇಸ್ ಇನ್ನೂ ಸಂಪರ್ಕಗೊಂಡಿಲ್ಲ, ಆದ್ದರಿಂದ ಈ ಸಂದೇಶ ಉಳಿಸಲಾಗಿಲ್ಲ — .env.local ಗೆ ನಿಮ್ಮ ಪ್ರಾಜೆಕ್ಟ್ ಕೀಗಳನ್ನು ಸೇರಿಸಿ.",
   }[status];
-
   return (
     <PageShell>
       <section className="page-hero" style={{ background: "var(--surface)" }}>
