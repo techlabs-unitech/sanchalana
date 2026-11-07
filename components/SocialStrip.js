@@ -1,13 +1,14 @@
 "use client";
 
 import { useSite } from "@/context/SiteContext";
-import { YoutubeIcon, InstagramIcon, FacebookIcon, LinkedinIcon } from "./Icons";
+import { YoutubeIcon, InstagramIcon, FacebookIcon, LinkedinIcon, XIcon } from "./Icons";
 
 const SOCIALS = [
   { href: "https://www.youtube.com/@SanchalanaNews-kannada", label: "YouTube", Icon: YoutubeIcon },
   { href: "https://www.instagram.com/sanchalana_news", label: "Instagram", Icon: InstagramIcon },
   { href: "https://www.facebook.com/895496663636367?ref=NONE_xav_ig_profile_page_web", label: "Facebook", Icon: FacebookIcon },
-  { href: "https://linkedin.com", label: "LinkedIn", Icon: LinkedinIcon },
+  { href: "https://www.linkedin.com/company/sanchalana-news/", label: "LinkedIn", Icon: LinkedinIcon },
+  { href: "https://x.com/SanchalanaNews", label: "X", Icon: XIcon },
 ];
 
 export default function SocialStrip() {

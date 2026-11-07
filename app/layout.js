@@ -26,7 +26,7 @@ const orgJsonLd = {
   name: SITE_NAME,
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo.jpg`,
-  sameAs: ["https://www.youtube.com/@SanchalanaNews-kannada", "https://www.instagram.com/sanchalana_news", "https://www.facebook.com/895496663636367?ref=NONE_xav_ig_profile_page_web", "https://linkedin.com"],
+  sameAs: ["https://www.youtube.com/@SanchalanaNews-kannada", "https://www.instagram.com/sanchalana_news", "https://www.facebook.com/895496663636367?ref=NONE_xav_ig_profile_page_web", "https://www.linkedin.com/company/sanchalana-news/", "https://x.com/SanchalanaNews"],
 };
 
 export default function RootLayout({ children }) {

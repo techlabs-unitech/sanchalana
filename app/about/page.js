@@ -1,17 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useSite } from "@/context/SiteContext";
 import PageShell from "@/components/PageShell";
 import SocialStrip from "@/components/SocialStrip";
-import { ShieldIcon, BoltIcon, PeopleIcon, PersonIcon, SignalIcon } from "@/components/Icons";
-
-const TEAM = [
-  { nameKey: "team_1_n", roleKey: "team_1_r" },
-  { nameKey: "team_2_n", roleKey: "team_2_r" },
-  { nameKey: "team_3_n", roleKey: "team_3_r" },
-  { nameKey: "team_4_n", roleKey: "team_4_r" },
-];
+import { ShieldIcon, BoltIcon, PeopleIcon } from "@/components/Icons";
 
 const TIMELINE = [1, 2, 3, 4];
 
@@ -42,9 +36,20 @@ export default function AboutPage() {
               <p style={{ margin: 0 }}>{t("about_mission")}</p>
             </div>
           </div>
-          <div className="ribbon-frame">
-            <div className="img-placeholder" style={{ aspectRatio: "4/3" }}>
-              <SignalIcon width={34} height={34} />
+          <div className="founder-profile">
+            <div className="founder-photo-frame">
+              <Image
+                src="/images/founder/sai-swami-founder.jpg"
+                alt={t("founder_name")}
+                fill
+                sizes="(max-width: 980px) 100vw, 50vw"
+                style={{ objectFit: "cover", objectPosition: "50% 40%" }}
+              />
+            </div>
+            <div className="founder-caption">
+              <span className="eyebrow">{t("founder_heading")}</span>
+              <h2>{t("founder_name")}</h2>
+              <p>{t("founder_role")}</p>
             </div>
           </div>
         </div>
@@ -99,16 +104,23 @@ export default function AboutPage() {
           <div className="section-head">
             <span className="eyebrow" style={{ display: "inline-flex" }}>{t("team_title")}</span>
           </div>
-          <div className="grid grid-4">
-            {TEAM.map((member) => (
-              <div className="card team-card" key={member.nameKey}>
-                <div className="img-placeholder"><PersonIcon /></div>
-                <div className="card-body">
-                  <h3>{t(member.nameKey)}</h3>
-                  <div className="role">{t(member.roleKey)}</div>
-                </div>
+          <div className="team-founder-card">
+            <div className="team-founder-photo">
+              <div className="team-founder-photo-frame">
+                <Image
+                  src="/images/founder/sai-swami-founder.jpg"
+                  alt={t("founder_name")}
+                  fill
+                  sizes="(max-width: 760px) 280px, (max-width: 980px) 45vw, 360px"
+                  style={{ objectFit: "cover", objectPosition: "50% 40%" }}
+                />
               </div>
-            ))}
+            </div>
+            <div className="team-founder-copy">
+              <span className="eyebrow">{t("founder_heading")}</span>
+              <h2>{t("founder_name")}</h2>
+              <p>{t("founder_role")}</p>
+            </div>
           </div>
         </div>
       </section>
