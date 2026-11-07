@@ -3,20 +3,29 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { useSite } from "@/context/SiteContext";
 import PageShell from "@/components/PageShell";
 import SocialStrip from "@/components/SocialStrip";
 import { PlayIcon, CameraIcon, COVER_ICONS } from "@/components/Icons";
 
-const ThreeScene = dynamic(() => import("@/components/3d/ThreeScene"), {
-  ssr: false,
-});
+const CATEGORY_ITEMS = [
+  { key: "politics", accent: "red" },
+  { key: "economy", accent: "blue" },
+  { key: "sports", accent: "red" },
+  { key: "culture", accent: "blue" },
+];
+
+const VIDEO_REPORTS = [
+  { tagKey: "video_1_tag", titleKey: "video_1_title", href: "https://www.youtube.com/@SanchalanaNews-kannada" },
+  { tagKey: "video_2_tag", titleKey: "video_2_title", href: "https://www.youtube.com/@SanchalanaNews-kannada" },
+  { tagKey: "video_3_tag", titleKey: "video_3_title", href: "https://www.youtube.com/@SanchalanaNews-kannada" },
+];
 
 export default function HomeClient({ latestArticles }) {
   const { t } = useSite();
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [search, setSearch] = useState("");
 
   const handlePlay = () => {
     const el = videoRef.current;
@@ -25,9 +34,15 @@ export default function HomeClient({ latestArticles }) {
     setIsPlaying(true);
   };
 
+  const featuredArticle = latestArticles[0] || null;
+  const trendingArticles = latestArticles.slice(1, 4);
+  const visibleArticles = latestArticles.filter((article) => {
+    const haystack = `${article.title} ${article.dek} ${article.tag}`.toLowerCase();
+    return haystack.includes(search.trim().toLowerCase());
+  });
+
   return (
     <PageShell>
-      {/* HERO */}
       <section className="hero">
         <div className="wrap hero-grid">
           <div className="hero-copy">
@@ -76,18 +91,6 @@ export default function HomeClient({ latestArticles }) {
         </div>
       </section>
 
-      {/* STATS */}
-            {/* 3D NEWS VISUAL */}
-      <section className="three-d-section">
-        <div className="wrap">
-          <div className="section-head">
-            <span className="eyebrow">EXPLORE</span>
-            <h2>Experience News in 3D</h2>
-          </div>
-
-          <ThreeScene />
-        </div>
-      </section>
       <section className="stats">
         <div className="stats-grid">
           <div className="stat-card"><div className="stat-num">2.5L+</div><div className="stat-label">{t("stat_subs")}</div></div>
@@ -97,7 +100,126 @@ export default function HomeClient({ latestArticles }) {
         </div>
       </section>
 
-      {/* VIDEOS */}
+      <section className="spotlight">
+        <div className="wrap spotlight-grid">
+          <article className="feature-story card">
+            <div className="feature-media">
+              {featuredArticle?.cover_image_url ? (
+                <Image
+                  src={featuredArticle.cover_image_url}
+                  alt={featuredArticle.title}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 760px) 100vw, 720px"
+                />
+              ) : (
+                <div className="feature-placeholder">
+                  <CameraIcon />
+                </div>
+              )}
+            </div>
+            <div className="feature-body">
+              <span className="tag">{featuredArticle?.tag || t("featured_story_tag")}</span>
+              <h2>{featuredArticle?.title || t("featured_story_title")}</h2>
+              <p>{featuredArticle?.dek || t("featured_story_desc")}</p>
+              <div className="feature-meta">
+                <span>{featuredArticle?.author || "Sanchalana News"}</span>
+                <span>{featuredArticle?.published_at ? new Date(featuredArticle.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "Today"}</span>
+              </div>
+              {featuredArticle && <Link href={`/newsletter/${featuredArticle.slug}`} className="btn btn-primary">{t("read_story")}</Link>}
+            </div>
+          </article>
+
+          <aside className="feature-rail card">
+            <div className="rail-header">
+              <span className="eyebrow">{t("trending_eyebrow")}</span>
+            </div>
+            {trendingArticles.length > 0 ? (
+              trendingArticles.map((article) => (
+                <Link href={`/newsletter/${article.slug}`} className="news-brief" key={article.slug}>
+                  <span className="news-brief__tag">{article.tag}</span>
+                  <h3>{article.title}</h3>
+                  <p>{article.dek}</p>
+                </Link>
+              ))
+            ) : (
+              <p className="empty-state">{t("no_results")}</p>
+            )}
+          </aside>
+        </div>
+      </section>
+
+      <section className="categories">
+        <div className="wrap">
+          <div className="section-head">
+            <span className="eyebrow">{t("category_eyebrow")}</span>
+            <h2>{t("category_title")}</h2>
+          </div>
+          <div className="category-grid">
+            {CATEGORY_ITEMS.map(({ key, accent }) => (
+              <div className={`category-card ${accent}`} key={key}>
+                <span className="category-kicker">{t(`${key}_label`)}</span>
+                <h3>{t(`${key}_title`)}</h3>
+                <p>{t(`${key}_desc`)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="articles" style={{ background: "var(--surface)" }}>
+        <div className="wrap">
+          <div className="section-head">
+            <span className="eyebrow">{t("articles_eyebrow")}</span>
+            <h2>{t("articles_title")}</h2>
+          </div>
+
+          <div className="news-tools">
+            <label className="sr-only" htmlFor="story-search">{t("search_news")}</label>
+            <input
+              id="story-search"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={t("search_news")}
+            />
+          </div>
+
+          {visibleArticles.length > 0 ? (
+            <div className="grid grid-3">
+              {visibleArticles.map((a) => {
+                const Icon = COVER_ICONS[a.cover_icon] || CameraIcon;
+                return (
+                  <article className="card" key={a.slug}>
+                    <div className="img-placeholder" style={{ position: "relative" }}>
+                      {a.cover_image_url ? (
+                        <Image
+                          src={a.cover_image_url}
+                          alt={a.title}
+                          fill
+                          style={{ objectFit: "cover" }}
+                          sizes="(max-width: 760px) 100vw, 380px"
+                        />
+                      ) : (
+                        <Icon />
+                      )}
+                    </div>
+                    <div className="card-body">
+                      <span className="tag">{a.tag}</span>
+                      <h3>{a.title}</h3>
+                      <p>{a.dek}</p>
+                    </div>
+                    <Link href={`/newsletter/${a.slug}`} style={{ position: "absolute", inset: 0 }} aria-label={a.title} />
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="empty-state">{t("no_results")}</div>
+          )}
+        </div>
+      </section>
+
       <section className="videos">
         <div className="wrap">
           <div className="section-head">
@@ -105,18 +227,16 @@ export default function HomeClient({ latestArticles }) {
             <h2>{t("videos_title")}</h2>
           </div>
           <div className="grid grid-3">
-            {[
-              { tagKey: "video_1_tag", titleKey: "video_1_title" },
-              { tagKey: "video_2_tag", titleKey: "video_2_title" },
-              { tagKey: "video_3_tag", titleKey: "video_3_title" },
-            ].map((v) => (
-              <article className="card" key={v.titleKey}>
+            {VIDEO_REPORTS.map(({ tagKey, titleKey, href }) => (
+              <article className="card video-card" key={titleKey}>
                 <div className="video-box">
-                  <div className="play-btn"><PlayIcon /></div>
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="play-btn" aria-label={t(titleKey)}>
+                    <PlayIcon />
+                  </a>
                 </div>
                 <div className="card-body">
-                  <span className="tag">{t(v.tagKey)}</span>
-                  <h3>{t(v.titleKey)}</h3>
+                  <span className="tag">{t(tagKey)}</span>
+                  <h3>{t(titleKey)}</h3>
                 </div>
               </article>
             ))}
@@ -129,50 +249,6 @@ export default function HomeClient({ latestArticles }) {
         </div>
       </section>
 
-      {/* ARTICLES — pulled live from Supabase (the admin dashboard writes
-          here); falls back to the bundled sample content until you've
-          published anything yourself. */}
-      <section className="articles" style={{ background: "var(--surface)" }}>
-        <div className="wrap">
-          <div className="section-head">
-            <span className="eyebrow">{t("articles_eyebrow")}</span>
-            <h2>{t("articles_title")}</h2>
-          </div>
-          <div className="grid grid-3">
-            {latestArticles.map((a) => {
-              const Icon = COVER_ICONS[a.cover_icon] || CameraIcon;
-              return (
-                <article className="card" key={a.slug}>
-                  <div className="img-placeholder" style={{ position: "relative" }}>
-                    {a.cover_image_url ? (
-                      <Image
-                        src={a.cover_image_url}
-                        alt={a.title}
-                        fill
-                        style={{ objectFit: "cover" }}
-                        sizes="(max-width: 760px) 100vw, 380px"
-                      />
-                    ) : (
-                      <Icon />
-                    )}
-                  </div>
-                  <div className="card-body">
-                    <span className="tag">{a.tag}</span>
-                    <h3>{a.title}</h3>
-                    <p>{a.dek}</p>
-                  </div>
-                  <Link href={`/newsletter/${a.slug}`} style={{ position: "absolute", inset: 0 }} aria-label={a.title} />
-                </article>
-              );
-            })}
-          </div>
-          <div className="section-foot">
-            <Link href="/newsletter" className="btn btn-outline">{t("articles_btn")}</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SOCIAL STRIP */}
       <SocialStrip />
     </PageShell>
   );

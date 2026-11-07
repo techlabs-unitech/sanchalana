@@ -4,13 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSite } from "@/context/SiteContext";
 import PageShell from "@/components/PageShell";
-import { PinIcon, PhoneIcon, MailIcon, ClockIcon, YoutubeIcon, InstagramIcon, FacebookIcon, LinkedinIcon } from "@/components/Icons";
+import { PinIcon, PhoneIcon, MailIcon, ClockIcon, YoutubeIcon, InstagramIcon, FacebookIcon, LinkedinIcon, XIcon } from "@/components/Icons";
 
 const SOCIALS = [
   { href: "https://www.youtube.com/@SanchalanaNews-kannada", label: "YouTube", Icon: YoutubeIcon },
   { href: "https://www.instagram.com/sanchalana_news", label: "Instagram", Icon: InstagramIcon },
   { href: "https://www.facebook.com/895496663636367?ref=NONE_xav_ig_profile_page_web", label: "Facebook", Icon: FacebookIcon },
-  { href: "https://linkedin.com", label: "LinkedIn", Icon: LinkedinIcon },
+  { href: "https://www.linkedin.com/company/sanchalana-news/", label: "LinkedIn", Icon: LinkedinIcon },
+  { href: "https://x.com/SanchalanaNews", label: "X", Icon: XIcon },
 ];
 
 export default function ContactPage() {
@@ -109,7 +110,16 @@ export default function ContactPage() {
               ))}
             </div>
 
-            <div className="map-placeholder">{t("map_label")}</div>
+            <div className="map-placeholder">
+              <iframe
+                title="Sanchalana News location"
+                src={t("map_label")}
+                style={{ border: 0, width: "100%", height: "100%", minHeight: "280px" }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
 
           <div className="contact-card">
